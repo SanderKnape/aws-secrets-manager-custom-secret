@@ -26,7 +26,7 @@ async function create_secret(client_secrets_manager, arn, token) {
   let data = await client_secrets_manager.getRandomPassword(params).promise();
   const password = data.RandomPassword;
   
-  console.log("RETRIEVED RANDOM PASSWORD");
+  console.log('RETRIEVED RANDOM PASSWORD');
   console.log(data);
   
   params = {
@@ -37,7 +37,7 @@ async function create_secret(client_secrets_manager, arn, token) {
   data = await client_secrets_manager.getSecretValue(params).promise();
   const current_dict = JSON.parse(data['SecretString']);
   
-  console.log("RETRIEVED CURRENT SECRET");
+  console.log('RETRIEVED CURRENT SECRET');
   console.log(data);
 
   // switch the ACTIVE/PASSIVE usernames around for the new secret
@@ -60,7 +60,7 @@ async function create_secret(client_secrets_manager, arn, token) {
 
   data = await client_secrets_manager.putSecretValue(params).promise();
   
-  console.log("PUT PENDING SECRET");
+  console.log('PUT PENDING SECRET');
   console.log(data);
 }
 
@@ -73,7 +73,7 @@ async function set_secret(client_secrets_manager, arn) {
   let data = await client_secrets_manager.getSecretValue(params).promise();
   const pending_dict = JSON.parse(data['SecretString']);
   
-  console.log("RETRIEVED PENDING SECRET");
+  console.log('RETRIEVED PENDING SECRET');
   console.log(data);
   
   params = {
@@ -84,7 +84,7 @@ async function set_secret(client_secrets_manager, arn) {
   data = await client_secrets_manager.getSecretValue(params).promise();
   const master_dict = JSON.parse(data['SecretString']);
   
-  console.log("RETRIEVED MASTER SECRET");
+  console.log('RETRIEVED MASTER SECRET');
   console.log(data);
 
   client.connect(`mongodb://${master_dict['username']}:${master_dict['password']}@${pending_dict['ipaddress']}:27017`, (err, client) => {
@@ -95,7 +95,7 @@ async function set_secret(client_secrets_manager, arn) {
       updateUser: pending_dict['username'],
       pwd: pending_dict['password']
     }, (err, res) => {
-      console.log("CHANGED PASSWORD IN MONGODB");
+      console.log('CHANGED PASSWORD IN MONGODB');
       console.log(res);
     });
     
@@ -112,7 +112,7 @@ async function test_secret(client_secrets_manager, arn) {
   const data = await client_secrets_manager.getSecretValue(params).promise();
   const pending_dict = JSON.parse(data['SecretString']);
   
-  console.log("RETRIEVED PENDING SECRET");
+  console.log('RETRIEVED PENDING SECRET');
   console.log(data);
   
   client.connect(`mongodb://${pending_dict['username']}:${pending_dict['password']}@${pending_dict['ipaddress']}:27017`, (err, client) => {
@@ -130,7 +130,7 @@ async function finish_secret(client_secrets_manager, arn, token) {
   let data = await client_secrets_manager.getSecretValue(params).promise();
   const version_id = data['VersionId'];
   
-  console.log("RETRIEVED CURRENT SECRET");
+  console.log('RETRIEVED CURRENT SECRET');
   console.log(data);
 
   params = {
@@ -142,6 +142,6 @@ async function finish_secret(client_secrets_manager, arn, token) {
   
   data = await client_secrets_manager.updateSecretVersionStage(params).promise();
   
-  console.log("PROMOTED PENDING SECRET TO CURRENT");
+  console.log('PROMOTED PENDING SECRET TO CURRENT');
   console.log(data);
 }

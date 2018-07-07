@@ -1,0 +1,6 @@
+{
+  "name": "lambda-mongodb-secret-rotation",
+  "dependencies": {
+    "mongodb": "^3.1.0"
+  }
+}
